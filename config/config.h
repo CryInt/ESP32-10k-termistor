@@ -1,6 +1,8 @@
+#include "wifi.h"
+
 #define ONBOARD_LED 2
 
-#define BUZZER_PIN 4
+#define BEEPER_PIN 4
 
 #define THERMISTOR_PIN 32
 

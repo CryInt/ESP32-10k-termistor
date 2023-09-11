@@ -1,62 +1,59 @@
-#include "config.h"
-#include "lut.h"
-#include "functions.h"
+#include <WiFi.h>
 
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include "config/config.h"
 
-// create an OLED display object connected to I2C
-Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, 1);
+#include "class/beeper/beeper.cpp"
+#include "class/led/led.cpp"
+#include "class/thermistor/thermistor.cpp"
+#include "class/display/display.cpp"
+
+LED OnBoardLed(ONBOARD_LED);
+BEEPER Sound(BEEPER_PIN);
+THERMISTOR Thermistor(THERMISTOR_PIN);
+DISPLAY_I2C Display;
 
 void setup()
 {
   Serial.begin(9600);
 
-  pinMode(ONBOARD_LED, OUTPUT);
-  pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(THERMISTOR_PIN, INPUT);
-
-  // initialize OLED display with I2C address 0x3C
-  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("failed to start SSD1306 OLED"));
-    while (1);
-  }
-
-  delay(2000); // wait two seconds for initializing
-
   Serial.println("RUN");
-  beep();
-  blinkFast(3);
+
+  Display.init();
+  Display.clear();
+
+  // connect to WiFi
+  Serial.printf("Connecting to %s ", WIFI_SSID);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+  // ====
+
+  Sound.beep();
+  OnBoardLed.blinkFast(3);
 }
 
 void loop()
 {
   Serial.println("Tick!");
-  
-  //blinkFast(3);
 
-  double temperature = getTemperature();
+  double temperature = Thermistor.getTemperature();
   Serial.println(temperature);
 
-  String temperatureString = String(temperature,2);
+  String temperatureString = String(temperature, 2);
 
-  oled.clearDisplay(); // clear display
-  oled.setCursor(0, 0);
+  Display.clear();
 
-  oled.setTextSize(2);         // set text size
-  oled.setTextColor(WHITE);    // set text color
-  oled.setCursor(0, 20);       // set position to display
-  oled.println(temperatureString + " " + (char)247 + "C"); // set text
+  if (WiFi.status() == WL_CONNECTED) {
+    Display.drawImage(111, 0, ICON_WIFI_HOTSPOT, ICON_WIFI_HOTSPOT_WIDTH, ICON_WIFI_HOTSPOT_HEIGHT);
+  }
 
-  //int startnum = 320; 
-  //for (int i = startnum; i < startnum+20; i++)  {
-  //  oled.print((char)i); 
-  //}
+  Display.println(20, 30, 3, temperatureString);
 
-  oled.display();              // display on OLED
+  Display.show();
 
-  blink(100);
+  OnBoardLed.blink(100);
 
   delay(1000);
 }
