@@ -33,6 +33,7 @@ double getAnalogTemperatureValue()
 double getTemperature()
 {
   double adc = getAnalogTemperatureValue();
+  adc = ADC_LUT[(int)adc];
 
   double Vout = adc * BOARD_VOLTAGE / MAX_AVAILABLE_ANALOG_VALUE_PIN;
   double Rt = DIVIDER_RESISTOR_VALUES * Vout / (BOARD_VOLTAGE - Vout);
@@ -41,4 +42,3 @@ double getTemperature()
   
   return T - 273.15;
 }
-

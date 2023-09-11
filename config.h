@@ -1,10 +1,13 @@
 #define ONBOARD_LED 2
 
-#define BUZZER_PIN 32
+#define BUZZER_PIN 4
 
-#define THERMISTOR_PIN 15
+#define THERMISTOR_PIN 32
 
-double BOARD_VOLTAGE = 3.3; // Voltage from divider
+#define SCREEN_WIDTH 128 // OLED width,  in pixels
+#define SCREEN_HEIGHT 64 // OLED height, in pixels
+
+double BOARD_VOLTAGE = 3.26; // Voltage from divider
 double DIVIDER_RESISTOR_VALUES = 10000; // divider resistor value
 
 double REFERENCE_TEMPERATURE_IN_KELVIN_FOR_25 = 298.15; // Temperature in Kelvin for 25 degree Celsius
