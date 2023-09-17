@@ -9,7 +9,7 @@
 #define SCREEN_WIDTH 128 // OLED width,  in pixels
 #define SCREEN_HEIGHT 64 // OLED height, in pixels
 
-double BOARD_VOLTAGE = 3.26; // Voltage from divider
+double BOARD_VOLTAGE = 3.3; // Voltage from divider
 double DIVIDER_RESISTOR_VALUES = 10000; // divider resistor value
 
 double REFERENCE_TEMPERATURE_IN_KELVIN_FOR_25 = 298.15; // Temperature in Kelvin for 25 degree Celsius
